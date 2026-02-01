@@ -26,8 +26,8 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor
 @Table(name = "light")
 public class Light {
-  public static final long GREEN_DURATION_MILLIS = 4000;
-  public static final long RED_DURATION_MILLIS = 3000;
+  public static final long GREEN_DURATION_MILLIS = 3000;
+  public static final long RED_DURATION_MILLIS = 4000;
   public static final long YELLOW_DURATION_MILLIS = 1000;
 
   @Id
@@ -80,7 +80,24 @@ public class Light {
     this.colorChangedAtMillis = System.currentTimeMillis();
   }
 
+  public synchronized void checkAndTransition() {
+    if (!active)
+      return;
+
+    long elapsed = getElapsedTimeMillis();
+    long duration = getDurationForCurrentColor();
+
+    if (elapsed >= duration) {
+      LightColor nextColor = color.next();
+      setColorInternal(nextColor);
+    }
+  }
+
   public void deactivate() {
     this.active = false;
+  }
+
+  public boolean isActive() {
+    return this.active;
   }
 }
