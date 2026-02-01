@@ -8,10 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Unit tests for the Light entity.
- * Tests color transitions, timing constants, and timer behavior.
- */
+/*
+* UNIT Tests
+*/
 class LightTest {
 
   private Light light;

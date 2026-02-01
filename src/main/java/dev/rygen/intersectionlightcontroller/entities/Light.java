@@ -75,11 +75,6 @@ public class Light {
     this.colorChangedAtMillis = System.currentTimeMillis();
   }
 
-  public void activate() {
-    this.active = true;
-    this.colorChangedAtMillis = System.currentTimeMillis();
-  }
-
   public synchronized void checkAndTransition() {
     if (!active)
       return;
@@ -95,6 +90,11 @@ public class Light {
 
   public void deactivate() {
     this.active = false;
+  }
+
+  public void activate() {
+    this.active = true;
+    this.colorChangedAtMillis = System.currentTimeMillis();
   }
 
   public boolean isActive() {
