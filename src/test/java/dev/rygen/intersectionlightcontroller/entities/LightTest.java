@@ -92,9 +92,37 @@ class LightTest {
   }
 
   @Test
-  @DisplayName("checkAndTransition: GREEN transitions to YELLOW after 4 seconds")
+  @DisplayName("checkAndTransition: GREEN transitions to YELLOW after 3 seconds")
   void testGreenTransitionToYellow() {
     LightColor testColor = LightColor.GREEN;
+    light.setColorInternal(testColor);
+    light.setActive(true);
+
+    light.setColorChangedAtMillis(System.currentTimeMillis() - 3001);
+    ;
+    light.checkAndTransition();
+
+    assertThat(light.getColor()).isEqualTo(testColor.next());
+  }
+
+  @Test
+  @DisplayName("checkAndTransition: YELLOW transitions to RED after 1 seconds")
+  void testYellowTransitionToRed() {
+    LightColor testColor = LightColor.YELLOW;
+    light.setColorInternal(testColor);
+    light.setActive(true);
+
+    light.setColorChangedAtMillis(System.currentTimeMillis() - 1001);
+    ;
+    light.checkAndTransition();
+
+    assertThat(light.getColor()).isEqualTo(testColor.next());
+  }
+
+  @Test
+  @DisplayName("checkAndTransition: RED transitions to GREEN after 4 seconds")
+  void testRedTransitionToGreen() {
+    LightColor testColor = LightColor.RED;
     light.setColorInternal(testColor);
     light.setActive(true);
 
@@ -103,5 +131,58 @@ class LightTest {
     light.checkAndTransition();
 
     assertThat(light.getColor()).isEqualTo(testColor.next());
+  }
+
+  @Test
+  @DisplayName("checkAndTransition: Does NOT transition before duration elapsed")
+  void testDoesNotTransitionBeforeDuration() {
+    light.setColorInternal(LightColor.GREEN);
+    light.setActive(true);
+
+    light.setColorChangedAtMillis(System.currentTimeMillis() - 2000);
+
+    light.checkAndTransition();
+
+    assertThat(light.getColor()).isEqualTo(LightColor.GREEN);
+  }
+
+  @Test
+  @DisplayName("checkAndTransition: Does NOT transition when inactive")
+  void testDoesNotTransitionWhenInactive() {
+    light.setColorInternal(LightColor.GREEN);
+    light.setActive(false);
+
+    // Simulate 5 seconds elapsed
+    light.setColorChangedAtMillis(System.currentTimeMillis() - 5000);
+
+    light.checkAndTransition();
+
+    assertThat(light.getColor()).isEqualTo(LightColor.GREEN);
+  }
+
+  @Test
+  @DisplayName("getElapsedTimeMillis returns 0 when timestamp is null")
+  void testGetElapsedTimeMillisWithNullTimestamp() {
+    Light newLight = new Light();
+    newLight.setColorChangedAtMillis(null);
+
+    assertThat(newLight.getElapsedTimeMillis()).isEqualTo(0);
+  }
+
+  @Test
+  @DisplayName("Constructor with color sets initial color")
+  void testConstructorWithColor() {
+    Light redLight = new Light(LightColor.RED);
+
+    assertThat(redLight.getColor()).isEqualTo(LightColor.RED);
+    assertThat(redLight.getColorChangedAtMillis()).isNotNull();
+  }
+
+  @Test
+  @DisplayName("No-arg constructor creates light with null color")
+  void testNoArgConstructor() {
+    Light emptyLight = new Light();
+
+    assertThat(emptyLight.getColor()).isNull();
   }
 }
