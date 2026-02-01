@@ -50,6 +50,12 @@ public class Light {
   @ToString.Exclude
   private Road road;
 
+  @Transient
+  private ScheduledExecutorService executor;
+
+  @Transient
+  private ScheduledFuture<?> timerTask;
+
   public Light(LightColor initialColor) {
     this.color = initialColor;
     this.colorChangedAtMillis = System.currentTimeMillis();
@@ -73,6 +79,14 @@ public class Light {
   public void setColorInternal(LightColor newColor) {
     this.color = newColor;
     this.colorChangedAtMillis = System.currentTimeMillis();
+  }
+
+  public void changeColor(LightColor newColor) {
+    setColorInternal(newColor);
+
+    if (road != null) {
+      road.onLightChanged(this, newColor);
+    }
   }
 
   public synchronized void checkAndTransition() {
@@ -99,5 +113,26 @@ public class Light {
 
   public boolean isActive() {
     return this.active;
+  }
+
+  public void startTimer() {
+    if (executor == null || executor.isShutdown()) {
+      executor = Executors.newSingleThreadScheduledExecutor();
+    }
+
+    timerTask = executor.scheduleAtFixedRate(
+        this::checkAndTransition,
+        100, 100, TimeUnit.MILLISECONDS);
+  }
+
+  public void stopTimer() {
+    if (timerTask != null) {
+      timerTask.cancel(false);
+      timerTask = null;
+    }
+    if (executor != null && !executor.isShutdown()) {
+      executor.shutdown();
+      executor = null;
+    }
   }
 }
