@@ -64,4 +64,25 @@ public class Road {
       light.deactivate();
     }
   }
+
+  public void onLightChanged(LightColor newColor) {
+    synchronizeLights(newColor);
+  }
+
+  public synchronized void synchronizeLights(LightColor color) {
+    for (Light light : lights) {
+      // prevent race condition by stopping and starting timer
+      light.stopTimer();
+      light.setColorInternal(color);
+      if (light.isActive()) {
+        light.startTimer();
+      }
+    }
+  }
+
+  public LightColor getCurrentColor() {
+    if (lights.isEmpty())
+      return null;
+    return lights.get(0).getColor();
+  }
 }
