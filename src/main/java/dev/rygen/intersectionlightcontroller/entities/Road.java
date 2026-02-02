@@ -41,9 +41,6 @@ public class Road {
   @OneToMany(mappedBy = "road", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<Light> lights = new ArrayList<>();
 
-  /**
-   * Initializes the road with 2 lights of the given color.
-   */
   public void initializeLights(LightColor initialColor) {
     for (int i = 0; i < 2; i++) {
       Light light = new Light(initialColor);
@@ -72,6 +69,9 @@ public class Road {
 
   public void onLightChanged(LightColor newColor) {
     synchronizeLights(newColor);
+    if (intersection != null) {
+      intersection.onRoadLightChanged(this, newColor);
+    }
   }
 
   public synchronized void synchronizeLights(LightColor color) {
