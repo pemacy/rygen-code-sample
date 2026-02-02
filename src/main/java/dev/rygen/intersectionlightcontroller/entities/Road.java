@@ -30,6 +30,9 @@ public class Road {
   @Column(name = "road_id")
   private Long roadId;
 
+  @Column(name = "active")
+  private boolean active = false;
+
   @ManyToOne
   @JoinColumn(name = "intersection_id")
   @ToString.Exclude // Prevent circular reference in toString
@@ -54,12 +57,14 @@ public class Road {
   }
 
   public void activate() {
+    this.active = true;
     for (Light light : lights) {
       light.activate();
     }
   }
 
   public void deactivate() {
+    this.active = false;
     for (Light light : lights) {
       light.deactivate();
     }
@@ -84,5 +89,9 @@ public class Road {
     if (lights.isEmpty())
       return null;
     return lights.get(0).getColor();
+  }
+
+  public boolean isActive() {
+    return this.active;
   }
 }
