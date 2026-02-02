@@ -62,4 +62,18 @@ class RoadTest {
     assertThat(road.getLight(1).isActive()).isFalse();
     assertThat(road.getLight(2).isActive()).isFalse();
   }
+
+  @Test
+  @DisplayName("onLightChange: Road synchronizes light changes")
+  void testOnLightChange() {
+    road.initializeLights(LightColor.GREEN);
+    Light light1 = road.getLight(1);
+    light1.setColorChangedAtMillis(System.currentTimeMillis() - 2001);
+    assertThat(System.currentTimeMillis() - light1.getColorChangedAtMillis()).isGreaterThan(2000);
+    light1.changeColor(LightColor.RED);
+    Light light2 = road.getLight(2);
+    light1 = road.getLight(1);
+    assertThat(light2.getColor()).isEqualTo(LightColor.RED);
+    assertThat(System.currentTimeMillis() - light1.getColorChangedAtMillis()).isLessThan(100);
+  }
 }

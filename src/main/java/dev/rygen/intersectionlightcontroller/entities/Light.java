@@ -85,7 +85,7 @@ public class Light {
     setColorInternal(newColor);
 
     if (road != null) {
-      road.onLightChanged(this, newColor);
+      road.onLightChanged(newColor);
     }
   }
 
