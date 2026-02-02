@@ -51,21 +51,57 @@ public class Intersection {
     road1.initializeLights(LightColor.GREEN);
     Road road2 = new Road();
     road2.setIntersection(this);
-    road1.initializeLights(LightColor.RED);
+    road2.initializeLights(LightColor.RED);
 
     roads.add(road1);
     roads.add(road2);
   }
 
   public void activate() {
+    this.active = true;
     for (Road road : roads) {
       road.activate();
     }
   }
 
   public void deactivate() {
+    this.active = false;
     for (Road road : roads) {
       road.deactivate();
     }
+  }
+
+  public boolean isActive() {
+    return this.active;
+  }
+
+  public Road getRoad(int index) {
+    index -= 1;
+    if (index < 0 || index >= roads.size())
+      return null;
+    return roads.get(index);
+  }
+
+  public synchronized void onRoadLightChanged(Road sourceRoad, LightColor newColor) {
+    if (newColor == LightColor.RED || newColor == LightColor.GREEN) {
+      Road oppositeRoad = getOppositeRoad(sourceRoad);
+
+      if (oppositeRoad != null) {
+        LightColor oppositeColor = newColor.opposite();
+        oppositeRoad.synchronizeLights(oppositeColor);
+      }
+    }
+  }
+
+  public Road getOppositeRoad(Road sourceRoad) {
+    boolean roadExists = roads.stream().anyMatch(r -> r == sourceRoad);
+
+    if (!roadExists)
+      return null;
+
+    return roads.stream()
+        .filter(r -> !r.equals(sourceRoad))
+        .findFirst()
+        .orElse(null);
   }
 }
