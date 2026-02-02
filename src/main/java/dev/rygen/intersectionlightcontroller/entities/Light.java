@@ -98,17 +98,19 @@ public class Light {
 
     if (elapsed >= duration) {
       LightColor nextColor = color.next();
-      setColorInternal(nextColor);
+      changeColor(nextColor);
     }
   }
 
   public void deactivate() {
     this.active = false;
+    stopTimer();
   }
 
   public void activate() {
     this.active = true;
     this.colorChangedAtMillis = System.currentTimeMillis();
+    startTimer();
   }
 
   public boolean isActive() {
