@@ -9,7 +9,6 @@ const activeLight = ref<string | null>(null)
 
 watch(() => props.light, (newLight) => {
   if (newLight) {
-    console.log(`Light ${newLight.lightId} - ${newLight.color.toLowerCase()}`)
     activeLight.value = newLight.color.toLowerCase()
   }
 }, { immediate: true })
