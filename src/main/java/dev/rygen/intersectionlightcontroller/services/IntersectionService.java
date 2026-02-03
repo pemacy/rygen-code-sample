@@ -4,12 +4,10 @@ import dev.rygen.intersectionlightcontroller.entities.Intersection;
 import dev.rygen.intersectionlightcontroller.entities.Light;
 import dev.rygen.intersectionlightcontroller.enums.LightColor;
 import dev.rygen.intersectionlightcontroller.repositories.IntersectionRepository;
-import dev.rygen.intersectionlightcontroller.repositories.LightRepository;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
-import java.util.List;
 
 @Service
 public class IntersectionService {
