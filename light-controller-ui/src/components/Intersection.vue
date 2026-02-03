@@ -5,36 +5,8 @@ import axios from 'axios'
 import type { Intersection, Road, Light } from '../types/'
 import TrafficLight from './TrafficLight.vue'
 import { global } from '../stores/appState'
-
-global.API_URL = 'http://localhost:8080/intersections'
-global.intersectionData: ref<Intersection | null> = ref(null)
-global.road1: ref<Road | null> = null
-global.road2: ref<Road | null> = null
-
-
-
-const isIntersectionActive = computed(() => {
-  console.log(`Intersection state: ${intersectionData.value?.active}`)
-  return intersectionData && intersectionData.value?.active
-})
-
-const activateIntersection = async () => {
-  try {
-    const res = await axios.post(`${API_URL}/${intersectionData.value?.intersectionId}/activate`)
-    startPolling()
-  } catch {
-    console.error("An error occured while activating the intersection")
-  }
-}
-
-const deactivateIntersection = async () => {
-  try {
-    const res = await axios.post(`${API_URL}/${intersectionData.value?.intersectionId}/deactivate`)
-    stopPolling()
-  } catch {
-    console.error("An error occured while de-activating the intersection")
-  }
-}
+import { isIntersectionActive } from '../services'
+import { activateIntersection, deactivateIntersection, createIntersection } from '../services'
 
 onMounted(async () => {
   await createIntersection()
