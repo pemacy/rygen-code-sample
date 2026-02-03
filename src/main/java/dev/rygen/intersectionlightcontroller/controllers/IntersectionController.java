@@ -36,6 +36,7 @@ public class IntersectionController {
   }
 
   @PostMapping("/{id}/activate")
+  @CrossOrigin(origins = "*")
   public ResponseEntity<IntersectionDTO> activateIntersection(@PathVariable Long id) {
     return intersectionService.activateIntersection(id)
         .map(IntersectionDTO::fromEntity)
@@ -44,6 +45,7 @@ public class IntersectionController {
   }
 
   @PostMapping("/{id}/deactivate")
+  @CrossOrigin(origins = "*")
   public ResponseEntity<IntersectionDTO> deactivateIntersection(@PathVariable Long id) {
     return intersectionService.deactivateIntersection(id)
         .map(IntersectionDTO::fromEntity)
