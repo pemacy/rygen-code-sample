@@ -6,13 +6,12 @@ export const createIntersection = async () => {
 
   try {
     const res = await axios.post(global.API_URL, {})
-    if (global.intersectionData?.value != null) {
-      const data = res.data
-      global.intersectionData.value = res.data
-      global.road1 = data.roads[0]
-      global.road2 = data.roads[1]
-      console.log('Intersection Created:', data.intersectionId)
-    }
+    const data = res.data
+    if (!global.intersectionData) throw new Error('global.intersectionData not defined')
+    global.intersectionData.value = res.data
+    global.road1 = data.roads[0]
+    global.road2 = data.roads[1]
+    console.log('Intersection Created:', data.intersectionId)
   } catch {
     console.error('Intersection failed to be created')
   }
@@ -26,6 +25,10 @@ export const fetchIntersectionState = async () => {
       )
       global.intersectionData.value = res.data
       console.log('New intersection data:', global.intersectionData.value)
+      console.info(
+        'Intersection is:',
+        global.intersectionData?.value?.active ? 'Active' : 'Deactive',
+      )
     }
   } catch {
     console.info('Intersection data failed to fetch')
@@ -33,6 +36,7 @@ export const fetchIntersectionState = async () => {
 }
 
 export const activateIntersection = async () => {
+  console.log('Activating intersection')
   if (global.intersectionData?.value?.intersectionId && global.startPolling) {
     try {
       const res = await axios.post(
@@ -42,11 +46,16 @@ export const activateIntersection = async () => {
         global.startPolling()
         global.intersectionData.value = res.data
       } else {
-        console.error('Intersection not activated, something when wrote')
+        console.error(
+          'Intersection not activated, something when wrote. Response code: ',
+          res.status,
+        )
       }
     } catch {
       console.error('An error occured while activating the intersection')
     }
+  } else {
+    console.log('Activation failed')
   }
 }
 
