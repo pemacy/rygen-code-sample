@@ -76,12 +76,7 @@ public class Road {
 
   public synchronized void synchronizeLights(LightColor color) {
     for (Light light : lights) {
-      // prevent race condition by stopping and starting timer
-      light.stopTimer();
       light.setColorInternal(color);
-      if (light.isActive()) {
-        light.startTimer();
-      }
     }
   }
 

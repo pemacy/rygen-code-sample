@@ -16,11 +16,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -49,12 +44,6 @@ public class Light {
   @JoinColumn(name = "road_id")
   @ToString.Exclude
   private Road road;
-
-  @Transient
-  private ScheduledExecutorService executor;
-
-  @Transient
-  private ScheduledFuture<?> timerTask;
 
   public Light(LightColor initialColor) {
     this.color = initialColor;
@@ -97,44 +86,23 @@ public class Light {
     long duration = getDurationForCurrentColor();
 
     if (elapsed >= duration) {
+      System.out.println("Light " + lightId + ": " + color);
       LightColor nextColor = color.next();
       changeColor(nextColor);
     }
   }
 
   public void deactivate() {
+    System.out.println("Light " + lightId + ": DeActivated");
     this.active = false;
-    stopTimer();
   }
 
   public void activate() {
     this.active = true;
     this.colorChangedAtMillis = System.currentTimeMillis();
-    startTimer();
   }
 
   public boolean isActive() {
     return this.active;
-  }
-
-  public void startTimer() {
-    if (executor == null || executor.isShutdown()) {
-      executor = Executors.newSingleThreadScheduledExecutor();
-    }
-
-    timerTask = executor.scheduleAtFixedRate(
-        this::checkAndTransition,
-        100, 100, TimeUnit.MILLISECONDS);
-  }
-
-  public void stopTimer() {
-    if (timerTask != null) {
-      timerTask.cancel(false);
-      timerTask = null;
-    }
-    if (executor != null && !executor.isShutdown()) {
-      executor.shutdown();
-      executor = null;
-    }
   }
 }
