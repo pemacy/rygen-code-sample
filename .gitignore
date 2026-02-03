@@ -38,3 +38,5 @@ out/
 
 *.tmp.java
 *.tmp
+
+*.ai.md
