@@ -31,7 +31,7 @@ public class Intersection {
   @Column(name = "active")
   private boolean active = false;
 
-  @OneToMany(mappedBy = "intersetion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  @OneToMany(mappedBy = "intersection", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<Road> roads = new ArrayList<>();
 
   public Intersection(boolean initialize) {
