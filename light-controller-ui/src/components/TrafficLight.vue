@@ -1,20 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import axios from 'axios'
-import { usePolling } from './composables/usePolling'
-const activeLight = ref<string>('red')
-import type { Intersection } from './types'
+import { ref, watch } from 'vue'
+import type { Light } from '../types/'
+import { global } from '../stores/'
 
-const intersectionData = ref(null)
-const intersectionId = ref(null)
+const props = defineProps<{ light?: Light }>()
+const activeLight = ref<string | null>(null)
 
-const fetchIntersectionData = async (id: number) => {
-  res: Response = await axios.get(`/intersections/${id}`)
-  intersectionData.value = res.data
-}
+watch(() => props.light, (newLight) => {
+  if (newLight) {
+    console.log(`Light ${newLight.lightId} - ${newLight.color.toLowerCase()}`)
+    activeLight.value = newLight.color.toLowerCase()
+  }
+}, { immediate: true })
 
 const handleActiveLightChange = () => {
-  axios.post('http://localhost:8080/intersections', { activeLight: activeLight.value })
+  axios.put(`http://localhost:8080/intersections/${global.intersectionData.value.intersectionId}/lights`,
+    { newColor: activeLight.value.toUpperCase(), lightId: props.light.lightId })
     .then(console.log)
     .catch(console.error)
 }
@@ -25,15 +27,15 @@ const handleActiveLightChange = () => {
     <div class="light-controller">
       <div class="light">
         <label>
-          <input type="radio" value="red" class="red" v-model="activeLight" name="light"
+          <input type="radio" value="red" class="red" v-model="activeLight" :name="`light-${light?.lightId}`"
             @change="handleActiveLightChange" /> Red
         </label>
         <label>
-          <input type="radio" value="yellow" class="yellow" v-model="activeLight" name="light"
+          <input type="radio" value="yellow" class="yellow" v-model="activeLight" :name="`light-${light?.lightId}`"
             @change="handleActiveLightChange" /> Yellow
         </label>
         <label>
-          <input type="radio" value="green" class="green" v-model="activeLight" name="light"
+          <input type="radio" value="green" class="green" v-model="activeLight" :name="`light-${light?.lightId}`"
             @change="handleActiveLightChange" /> Green
         </label>
       </div>
