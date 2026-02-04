@@ -11,10 +11,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import java.util.Map;
 
 @Entity
 @Data
@@ -53,6 +53,13 @@ public class Light {
     this.initialColor = initialColor;
     this.color = LightColor.OFF;
     this.colorChangedAtMillis = System.currentTimeMillis();
+  }
+
+  public Map<String, Long> getDurationForAllColors() {
+    return Map.of(
+        "green", GREEN_DURATION_MILLIS,
+        "yellow", YELLOW_DURATION_MILLIS,
+        "red", RED_DURATION_MILLIS);
   }
 
   public long getDurationForCurrentColor() {

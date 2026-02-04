@@ -3,6 +3,7 @@ package dev.rygen.intersectionlightcontroller.dtos;
 import dev.rygen.intersectionlightcontroller.entities.Light;
 import dev.rygen.intersectionlightcontroller.enums.LightColor;
 import lombok.Builder;
+import java.util.Map;
 
 @Builder
 public record LightDTO(
@@ -11,7 +12,8 @@ public record LightDTO(
     boolean active,
     Long colorChangedAtMillis,
     long elapsedTimeMillis,
-    long durationForCurrentColor) {
+    long durationForCurrentColor,
+    Map<String, Long> durationForAllColors) {
   public static LightDTO fromEntity(Light light) {
     return LightDTO.builder()
         .lightId(light.getLightId())
@@ -20,6 +22,7 @@ public record LightDTO(
         .colorChangedAtMillis(light.getColorChangedAtMillis())
         .elapsedTimeMillis(light.getElapsedTimeMillis())
         .durationForCurrentColor(light.getDurationForCurrentColor())
+        .durationForAllColors(light.getDurationForAllColors())
         .build();
   }
 }
