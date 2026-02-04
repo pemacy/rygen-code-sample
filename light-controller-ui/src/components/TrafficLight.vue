@@ -19,6 +19,13 @@ const handleActiveLightChange = () => {
     .then(console.log)
     .catch(console.error)
 }
+const handleLightActivateChange = () => {
+  if (props.light.active) {
+    axios.post(`${global.API_URL}/${global.intersectionData.value.intersectionId}/lights/${props.light.lightId}/deactivate`)
+  } else {
+    axios.post(`${global.API_URL}/${global.intersectionData.value.intersectionId}/lights/${props.light.lightId}/activate`)
+  }
+}
 </script>
 
 <template>
@@ -39,7 +46,13 @@ const handleActiveLightChange = () => {
         </label>
       </div>
 
-      <p>Active light: {{ activeLight }}</p>
+      <p>{{ light?.active ? "Activated" : "De-Activated" }}</p>
+      <div v-if="light?.active">
+        <button @click="handleLightActivateChange">Deactivate</button>
+      </div>
+      <div v-else>
+        <button @click="handleLightActivateChange">Activate</button>
+      </div>
     </div>
   </main>
 </template>
