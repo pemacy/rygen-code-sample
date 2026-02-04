@@ -7,7 +7,7 @@ import TrafficLight from './TrafficLight.vue'
 import { global } from '../stores/appState'
 import { activateIntersection, deactivateIntersection, createIntersection, fetchIntersectionState } from '../services'
 
-const { stopPolling, startPolling } = usePolling(fetchIntersectionState, 50)
+const { stopPolling, startPolling } = usePolling(fetchIntersectionState, 100)
 global.stopPolling = stopPolling
 global.startPolling = startPolling
 
