@@ -76,7 +76,9 @@ public class Road {
 
   public synchronized void synchronizeLights(LightColor color) {
     for (Light light : lights) {
-      light.setColorInternal(color);
+      if (light.isActive()) {
+        light.setColorInternal(color);
+      }
     }
   }
 

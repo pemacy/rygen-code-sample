@@ -83,13 +83,11 @@ public class Intersection {
   }
 
   public synchronized void onRoadLightChanged(Road sourceRoad, LightColor newColor) {
-    if (newColor == LightColor.RED || newColor == LightColor.GREEN) {
-      Road oppositeRoad = getOppositeRoad(sourceRoad);
+    Road oppositeRoad = getOppositeRoad(sourceRoad);
 
-      if (oppositeRoad != null) {
-        LightColor oppositeColor = newColor.opposite();
-        oppositeRoad.synchronizeLights(oppositeColor);
-      }
+    if (oppositeRoad != null) {
+      LightColor oppositeColor = newColor.opposite();
+      oppositeRoad.synchronizeLights(oppositeColor);
     }
   }
 

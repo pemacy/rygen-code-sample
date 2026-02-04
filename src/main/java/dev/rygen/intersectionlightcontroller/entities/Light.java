@@ -31,6 +31,10 @@ public class Light {
   private Long lightId;
 
   @Enumerated(EnumType.STRING)
+  @Column(name = "initial_color")
+  private LightColor initialColor;
+
+  @Enumerated(EnumType.STRING)
   @Column(name = "color")
   private LightColor color;
 
@@ -46,7 +50,8 @@ public class Light {
   private Road road;
 
   public Light(LightColor initialColor) {
-    this.color = initialColor;
+    this.initialColor = initialColor;
+    this.color = LightColor.OFF;
     this.colorChangedAtMillis = System.currentTimeMillis();
   }
 
@@ -55,6 +60,7 @@ public class Light {
       case GREEN -> GREEN_DURATION_MILLIS;
       case YELLOW -> YELLOW_DURATION_MILLIS;
       case RED -> RED_DURATION_MILLIS;
+      case OFF -> Long.MAX_VALUE;
     };
   }
 
@@ -79,14 +85,16 @@ public class Light {
   }
 
   public synchronized void checkAndTransition() {
-    if (!active)
+    if (!active) {
+      setColorInternal(LightColor.OFF);
       return;
+    }
 
     long elapsed = getElapsedTimeMillis();
     long duration = getDurationForCurrentColor();
 
     if (elapsed >= duration) {
-      System.out.println("Light " + lightId + ": " + color);
+      // System.out.println("Light " + lightId + ": " + color);
       LightColor nextColor = color.next();
       changeColor(nextColor);
     }
@@ -94,10 +102,13 @@ public class Light {
 
   public void deactivate() {
     System.out.println("Light " + lightId + ": DeActivated");
+    setColorInternal(LightColor.OFF);
     this.active = false;
   }
 
   public void activate() {
+    System.out.println("Light " + lightId + ": Activated");
+    setColorInternal(initialColor);
     this.active = true;
     this.colorChangedAtMillis = System.currentTimeMillis();
   }
