@@ -7,6 +7,16 @@ export interface Light {
   colorChangedAtMillis: number
   elapsedTimeMillis: number
   durationForCurrentColor: number
+  initialColor?: string
+  greenDurationMillis?: number
+  yellowDurationMillis?: number
+  redDurationMillis?: number
+}
+
+export interface LightTimingInfo {
+  greenDurationMillis: number
+  yellowDurationMillis: number
+  redDurationMillis: number
 }
 
 export interface Road {
@@ -19,6 +29,7 @@ export interface Intersection {
   intersectionId: number
   active: boolean
   roads: Road[]
+  defaultTiming?: LightTimingInfo
 }
 
 export interface GlobalObject {
