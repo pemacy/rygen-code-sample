@@ -1,9 +1,8 @@
 package dev.rygen.intersectionlightcontroller.controllers;
 
-import dev.rygen.intersectionlightcontroller.dtos.ChangeLightColorRequest;
-import dev.rygen.intersectionlightcontroller.dtos.IntersectionDTO;
+import dev.rygen.intersectionlightcontroller.dtos.*;
 import dev.rygen.intersectionlightcontroller.entities.Intersection;
-import dev.rygen.intersectionlightcontroller.services.IntersectionService;
+import dev.rygen.intersectionlightcontroller.services.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +47,29 @@ public class IntersectionController {
   @CrossOrigin(origins = "*")
   public ResponseEntity<IntersectionDTO> deactivateIntersection(@PathVariable Long id) {
     return intersectionService.deactivateIntersection(id)
+        .map(IntersectionDTO::fromEntity)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PostMapping("/{id}/lights/{light_id}/deactivate")
+  @CrossOrigin(origins = "*")
+  public ResponseEntity<IntersectionDTO> deactivateLight(
+      @PathVariable Long id,
+      @PathVariable("light_id") Long lightId) {
+    System.out.println("Light " + lightId + " - deactivated");
+    return intersectionService.deactivateLight(id, lightId)
+        .map(IntersectionDTO::fromEntity)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PostMapping("/{id}/lights/{light_id}/activate")
+  @CrossOrigin(origins = "*")
+  public ResponseEntity<IntersectionDTO> activateLight(
+      @PathVariable Long id,
+      @PathVariable("light_id") Long lightId) {
+    return intersectionService.activateLight(id, lightId)
         .map(IntersectionDTO::fromEntity)
         .map(ResponseEntity::ok)
         .orElse(ResponseEntity.notFound().build());
