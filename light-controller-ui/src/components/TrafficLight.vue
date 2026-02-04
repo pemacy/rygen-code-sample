@@ -29,7 +29,7 @@ const handleLightActivateChange = () => {
 }
 
 const formatDuration = (ms: number | undefined): string => {
-  if (ms === undefined) return 'N/A'
+  if (ms === undefined || ms > 10000) return 'N/A'
   return `${(ms / 1000).toFixed(1)}s`
 }
 
@@ -75,36 +75,28 @@ const timeRemaining = computed(() => {
           <span>{{ light?.lightId }}</span>
         </div>
         <div class="setting-row">
-          <span class="label">Initial Color:</span>
-          <span>{{ light?.initialColor ?? 'N/A' }}</span>
-        </div>
-        <div class="setting-row">
-          <span class="label">Current Color:</span>
-          <span>{{ light?.color }}</span>
-        </div>
-        <div class="setting-row">
           <span class="label">Active:</span>
           <span>{{ light?.active ? 'Yes' : 'No' }}</span>
         </div>
         <div class="setting-row">
-          <span class="label">Green Duration:</span>
-          <span>{{ formatDuration(light?.greenDurationMillis) }}</span>
-        </div>
-        <div class="setting-row">
-          <span class="label">Yellow Duration:</span>
-          <span>{{ formatDuration(light?.yellowDurationMillis) }}</span>
-        </div>
-        <div class="setting-row">
-          <span class="label">Red Duration:</span>
-          <span>{{ formatDuration(light?.redDurationMillis) }}</span>
-        </div>
-        <div class="setting-row">
-          <span class="label">Time Elapsed:</span>
-          <span>{{ formatDuration(light?.elapsedTimeMillis) }}</span>
+          <span class="label">Current Color: </span>
+          <span>{{ light?.color }}</span>
         </div>
         <div class="setting-row">
           <span class="label">Time Remaining:</span>
           <span>{{ formatDuration(timeRemaining) }}</span>
+        </div>
+        <div class="setting-row">
+          <span class="label">Green Duration:</span>
+          <span>{{ formatDuration(light?.durationForAllColors?.green) }}</span>
+        </div>
+        <div class="setting-row">
+          <span class="label">Yellow Duration:</span>
+          <span>{{ formatDuration(light?.durationForAllColors?.yellow) }}</span>
+        </div>
+        <div class="setting-row">
+          <span class="label">Red Duration:</span>
+          <span>{{ formatDuration(light?.durationForAllColors?.red) }}</span>
         </div>
       </div>
     </div>

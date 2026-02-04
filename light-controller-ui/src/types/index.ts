@@ -1,5 +1,11 @@
 import type { Ref, ComputedRef } from 'vue'
 
+interface DurationForAllColors {
+  green: number
+  yellow: number
+  red: number
+}
+
 export interface Light {
   lightId: number
   color: string
@@ -8,9 +14,7 @@ export interface Light {
   elapsedTimeMillis: number
   durationForCurrentColor: number
   initialColor?: string
-  greenDurationMillis?: number
-  yellowDurationMillis?: number
-  redDurationMillis?: number
+  durationForAllColors?: DurationForAllColors
 }
 
 export interface LightTimingInfo {
