@@ -36,9 +36,9 @@ const formatDuration = (ms: number | undefined): string => {
 }
 
 const totalCycleSeconds = computed(() => {
-  const timing = global.intersectionData?.value?.defaultTiming
+  const timing = global.intersectionData?.value?.durationForAllColors
   if (!timing) return 'N/A'
-  const total = timing.greenDurationMillis + timing.yellowDurationMillis + timing.redDurationMillis
+  const total = timing.green + timing.yellow + timing.red
   return `${(total / 1000).toFixed(1)}s`
 })
 </script>
@@ -56,15 +56,15 @@ const totalCycleSeconds = computed(() => {
     </div>
   </div>
   <div class='footer'>
-    <button class="info-toggle" @click="showInfo = !showInfo">
-      {{ showInfo ? 'Hide Info' : 'View Info' }}
-    </button>
     <div v-if="global.intersectionData?.value?.active">
       <button @click="deactivateIntersection">DeActivate Intersection</button>
     </div>
     <div v-else>
       <button @click="activateIntersection">Activate Intersection</button>
     </div>
+    <button class="info-toggle" @click="showInfo = !showInfo">
+      {{ showInfo ? 'Hide Info' : 'View Info' }}
+    </button>
   </div>
 
   <div v-if="showInfo" class="info-panel">
@@ -88,15 +88,15 @@ const totalCycleSeconds = computed(() => {
     <h4>Default Timing Configuration</h4>
     <div class="info-row">
       <span class="label">Green Duration:</span>
-      <span>{{ formatDuration(global.intersectionData?.value?.defaultTiming?.greenDurationMillis) }}</span>
+      <span>{{ formatDuration(global.intersectionData?.value?.durationForAllColors?.green) }}</span>
     </div>
     <div class="info-row">
       <span class="label">Yellow Duration:</span>
-      <span>{{ formatDuration(global.intersectionData?.value?.defaultTiming?.yellowDurationMillis) }}</span>
+      <span>{{ formatDuration(global.intersectionData?.value?.durationForAllColors?.yellow) }}</span>
     </div>
     <div class="info-row">
       <span class="label">Red Duration:</span>
-      <span>{{ formatDuration(global.intersectionData?.value?.defaultTiming?.redDurationMillis) }}</span>
+      <span>{{ formatDuration(global.intersectionData?.value?.durationForAllColors?.red) }}</span>
     </div>
     <div class="info-row total-cycle">
       <span class="label">Total Cycle Time:</span>

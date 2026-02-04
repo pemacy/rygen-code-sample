@@ -33,7 +33,7 @@ export interface Intersection {
   intersectionId: number
   active: boolean
   roads: Road[]
-  defaultTiming?: LightTimingInfo
+  durationForAllColors?: DurationForAllColors
 }
 
 export interface GlobalObject {
