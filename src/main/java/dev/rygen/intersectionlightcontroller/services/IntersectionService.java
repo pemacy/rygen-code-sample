@@ -3,7 +3,7 @@ package dev.rygen.intersectionlightcontroller.services;
 import dev.rygen.intersectionlightcontroller.entities.Intersection;
 import dev.rygen.intersectionlightcontroller.entities.Light;
 import dev.rygen.intersectionlightcontroller.enums.LightColor;
-import dev.rygen.intersectionlightcontroller.repositories.IntersectionRepository;
+import dev.rygen.intersectionlightcontroller.repositories.*;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +13,13 @@ import java.util.Optional;
 public class IntersectionService {
 
   private final IntersectionRepository intersectionRepository;
+  private final LightRepository lightRepository;
 
-  public IntersectionService(IntersectionRepository intersectionRepository) {
+  public IntersectionService(
+      IntersectionRepository intersectionRepository,
+      LightRepository lightRepository) {
     this.intersectionRepository = intersectionRepository;
+    this.lightRepository = lightRepository;
   }
 
   public Intersection createIntersection() {
@@ -35,6 +39,28 @@ public class IntersectionService {
       inter.activate();
       intersectionRepository.save(inter);
     });
+    return intersection;
+  }
+
+  @Transactional
+  public Optional<Intersection> deactivateLight(Long intersectionId, Long lightId) {
+    Optional<Light> light = this.lightRepository.findById(lightId);
+    light.ifPresent(lt -> {
+      lt.deactivate();
+      lightRepository.save(lt);
+    });
+    Optional<Intersection> intersection = this.intersectionRepository.findById(intersectionId);
+    return intersection;
+  }
+
+  @Transactional
+  public Optional<Intersection> activateLight(Long intersectionId, Long lightId) {
+    Optional<Light> light = this.lightRepository.findById(lightId);
+    light.ifPresent(lt -> {
+      lt.activate();
+      lightRepository.save(lt);
+    });
+    Optional<Intersection> intersection = this.intersectionRepository.findById(intersectionId);
     return intersection;
   }
 
