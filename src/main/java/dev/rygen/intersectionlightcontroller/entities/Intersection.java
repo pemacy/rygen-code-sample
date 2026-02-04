@@ -14,6 +14,7 @@ import jakarta.persistence.OneToMany;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -43,6 +44,13 @@ public class Intersection {
   public static Intersection createWithRoads() {
     Intersection intersection = new Intersection(true);
     return intersection;
+  }
+
+  public Map<String, Long> getDurationForAllColors() {
+    return Map.of(
+        "green", LightColor.GREEN.duration(),
+        "yellow", LightColor.YELLOW.duration(),
+        "red", LightColor.RED.duration());
   }
 
   public void initializeRoads() {

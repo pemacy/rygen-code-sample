@@ -21,10 +21,6 @@ import java.util.Map;
 @NoArgsConstructor
 @Table(name = "light")
 public class Light {
-  public static final long GREEN_DURATION_MILLIS = 3000;
-  public static final long RED_DURATION_MILLIS = 4000;
-  public static final long YELLOW_DURATION_MILLIS = 1000;
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "light_id")
@@ -57,18 +53,13 @@ public class Light {
 
   public Map<String, Long> getDurationForAllColors() {
     return Map.of(
-        "green", GREEN_DURATION_MILLIS,
-        "yellow", YELLOW_DURATION_MILLIS,
-        "red", RED_DURATION_MILLIS);
+        "green", LightColor.GREEN.duration(),
+        "yellow", LightColor.YELLOW.duration(),
+        "red", LightColor.RED.duration());
   }
 
   public long getDurationForCurrentColor() {
-    return switch (color) {
-      case GREEN -> GREEN_DURATION_MILLIS;
-      case YELLOW -> YELLOW_DURATION_MILLIS;
-      case RED -> RED_DURATION_MILLIS;
-      case OFF -> Long.MAX_VALUE;
-    };
+    return color.duration();
   }
 
   public long getElapsedTimeMillis() {
@@ -98,7 +89,7 @@ public class Light {
     }
 
     long elapsed = getElapsedTimeMillis();
-    long duration = getDurationForCurrentColor();
+    long duration = color.duration();
 
     if (elapsed >= duration) {
       // System.out.println("Light " + lightId + ": " + color);

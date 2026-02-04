@@ -23,4 +23,13 @@ public enum LightColor {
       case OFF -> OFF;
     };
   }
+
+  public long duration() {
+    return switch (this) {
+      case GREEN -> 4000;
+      case RED -> 3000;
+      case YELLOW -> 1000;
+      case OFF -> Long.MAX_VALUE;
+    };
+  }
 }
