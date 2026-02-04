@@ -19,7 +19,7 @@ public enum LightColor {
     return switch (this) {
       case GREEN -> RED;
       case RED -> GREEN;
-      case YELLOW -> YELLOW;
+      case YELLOW -> RED;
       case OFF -> OFF;
     };
   }
