@@ -19,15 +19,15 @@ public enum LightColor {
     return switch (this) {
       case GREEN -> RED;
       case RED -> GREEN;
-      case YELLOW -> RED;
+      case YELLOW -> YELLOW;
       case OFF -> OFF;
     };
   }
 
   public long duration() {
     return switch (this) {
-      case GREEN -> 4000;
-      case RED -> 3000;
+      case GREEN -> 3000;
+      case RED -> 4000;
       case YELLOW -> 1000;
       case OFF -> Long.MAX_VALUE;
     };
